@@ -1,0 +1,37 @@
+Interrupt handling in ARM CORTEX M4 
+How external peripheral such as GPIO interrupts the procesor via NVIC
+Total 256 exceptions
+15 are system exceptions
+240 are external exceptions
+that is 16th exception is called external interrupt 1
+IRQ number
+GPIO interrupt not connected NVIC directly but connected via EXTI block(Refer diagram screenshot)
+EXTI handles 23 interrupts
+EXTI 0
+EXTI 1
+:
+:
+:
+EXTI 22
+
+out of 23, 16 are for GPIO. This is how GPIO of STM32 interrupts ARM CORTEX M4 processors. But other peripherals such as SPI,I2C etc.. will issue interrupts directly viatheir own lines to NVIC.
+ 
+ARM CORTEX M4 has 240 IRQ numbers.
+
+EXTI2 connected to NVIC on 8. So IRQ number for EXTI2 is 8.(This we can find out using data sheet - Vector table for that particular MCU).
+
+IRQ Numbers: Decides to which line of NVIC the interrupt is connect.
+
+Vector table and IRQ handler: 
+startup code already will be having vector table and IRQ handlers with valid IRQ addresses.When a particular interrupt occurs from a particular peripheral, the address of the handler is picked up from the Table and particular handler will be run in order to process the interrupt.
+
+EXTI controller block registers: 
+1. Interrupt mask register(EXTI_IMR) ------------Masking/Unmasking interrupts
+2. Evemt mask register(EXTI_EMR)  -------------
+3. Rising trigger selection register(EXTI_RTSR) ------- used to configure interrupt tigger aas rising edge trigger
+4. Falling trigger selection register(EXTI_FTSR) ------- used to configure interrupt tigger aas falling edge trigger
+5. Software interrupt event register(EXTI_SWIER)
+6.Pending register(EXTI_PR) ------------ sets bit on corresponding line in order to indicate interrupt is pending
+
+Testing: 
+Button is connected PA0 -- Connected to EXTI0 -- IRQ number 6. 
